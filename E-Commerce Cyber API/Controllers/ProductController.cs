@@ -19,10 +19,6 @@ public class ProductController : ControllerBase
     public IActionResult GetAllProducts()
     {
         var products = _productService.GetAllProducts();
-        if (!products.Any())
-        {
-            throw new Exception("No products found");
-        }
         return Ok(products);
     }
 }

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
+using Cyber.Application.Dtos.Address;
+using Cyber.Application.Dtos.Role;
+using Cyber.Application.Dtos.User;
 using Cyber.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cyber.Application.Mapper;
 
@@ -13,5 +11,17 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Product, Product>();
+
+        // Address mapping
+        CreateMap<Address, AddressDto>();
+        CreateMap<AddAddressDto, Address>();
+
+        // User mapping
+        CreateMap<User, UserDto>();
+        CreateMap<AddUserDto, User>();
+
+        // Role mapping
+        CreateMap<Role, RoleDto>();
+        CreateMap<AddRoleDto, Role>();
     }
 }

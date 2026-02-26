@@ -16,12 +16,9 @@ public class CyberDbContext : DbContext
     {
         _configuration = configuration;
     }
-    public DbSet<Product> Products { get; set; }
 
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    modelBuilder.Entity<Product>()
-    //        .Property(p => p.Price)
-    //        .HasPrecision(18, 4);
-    //}
+    public DbSet<Product> Products { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Address> Addresses { get; set; }
+    public DbSet<Role> Roles { get; set; }  
 }

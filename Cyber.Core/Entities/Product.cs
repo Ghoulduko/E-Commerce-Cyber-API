@@ -1,4 +1,5 @@
 ﻿using Cyber.Core.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,8 @@ public class Product
     public required string Name { get; set; }
     public required Brand Brand { get; set; }
     public required string Description { get; set; }
+
+    [Precision(4,2)]
     public required decimal Price { get; set; }
     public bool IsInStock { get; set; }
     public required string ImageUrl { get; set; }

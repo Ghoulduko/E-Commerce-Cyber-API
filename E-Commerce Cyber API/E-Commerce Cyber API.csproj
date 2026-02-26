@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.24" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23">
       <PrivateAssets>all</PrivateAssets>
@@ -18,12 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\Phones\Samsung\" />
+    <ProjectReference Include="..\Cyber.Application\Cyber.Application.csproj" />
+    <ProjectReference Include="..\Cyber.Core\Cyber.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cyber.Application\Cyber.Application.csproj" />
-    <ProjectReference Include="..\Cyber.Core\Cyber.Core.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
