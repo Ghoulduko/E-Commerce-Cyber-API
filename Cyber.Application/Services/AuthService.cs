@@ -2,6 +2,7 @@
 using Cyber.Application.Dtos.User;
 using Cyber.Core.Database;
 using Cyber.Core.Helper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -29,19 +30,19 @@ public class AuthService
         _configuration = configuration;
     }
 
-    public string Login(LoginUserDto request)
+    public async Task<string> Login(LoginUserDto request)
     {
-        var user = _context.Users.SingleOrDefault(u => u.Email == request.Email);
+        var user = await _context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Email == request.Email);
         if (user == null) throw new ArgumentException("No account found with the provided email");
 
-        if (BC.EnhancedVerify(request.Password, user.Password)) throw new ArgumentException("The password is wrong, try again");
-
+        if (!BC.EnhancedVerify(request.Password, user.Password)) throw new ArgumentException("The password is wrong, try again");
+        
         var claims = new List<Claim>
         {
             new Claim("UserId", user.Id.ToString()),
             new Claim("Email", user.Email),
             new Claim("SignInTime", DateTime.Now.ToString()),
-            new Claim("RoleId", user.RoleId.ToString())
+            new Claim(ClaimTypes.Role, user.Role!.RoleName.ToString())
         };
 
         var jwtSecretKey = _configuration["JwtSecretKey"] ?? throw new ArgumentNullException("No jwt secret key found");
@@ -60,6 +61,4 @@ public class AuthService
 
         return new JwtSecurityTokenHandler().WriteToken(token).ToString();
     }
-
-
 }

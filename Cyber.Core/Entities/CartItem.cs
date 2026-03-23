@@ -8,19 +8,20 @@ using System.Threading.Tasks;
 
 namespace Cyber.Core.Entities;
 
-[Table("Users")]
-public class User
+[Table("CartItems")]
+public class CartItem
 {
     [Key]
     public int Id { get; set; }
-    public required string Name { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    public int Quantity { get; set; }
 
-    [ForeignKey("Role")]
-    public int RoleId { get; set; }
-    public Role? Role { get; set; }
+    [ForeignKey("Cart")]
+    public int CartId { get; set; }
 
-    public List<Address>? Addresses { get; set; }
+    [ForeignKey("Product")]
+    public int ProductId { get; set; }
+
+
     public Cart? Cart { get; set; }
+    public Product? Product { get; set; }
 }

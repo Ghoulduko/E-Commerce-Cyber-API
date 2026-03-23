@@ -19,32 +19,48 @@ public class AddressController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "ADMIN,SUPERADMIN")]
     public IActionResult GetAll()
     {
         var allAddresses = _addressService.GetAll();
         return Ok(allAddresses);
     }
 
-    [HttpGet("GetAddressById")]
+    [HttpGet("GetAddressById/{id}")]
+    [Authorize(Roles = "ADMIN,SUPERADMIN")]
     public IActionResult Get(int id)
     {
         var address = _addressService.GetById(id);
         return Ok(address);
     }
-    
-    [HttpPost("AddAddress")]
-    public IActionResult AddAddress(AddAddressDto address)
+
+    [HttpGet("GetUserAddresses")]
+    [Authorize]
+    public IActionResult GetUserAddresses()
     {
-        //var userId = User.FindFirst("UserId")?.Value;
-        //if (userId == null) throw new ArgumentException("You are not logged in");
-        _addressService.AddAddress(address);
+        var userId = User.FindFirst("UserId")?.Value;
+        if(userId == null) return Unauthorized("You are not logged in");
+        var addresses = _addressService.GetUserAddresses(int.Parse(userId));
+        return Ok(addresses);
+    }
+
+    [HttpPost("AddAddress")]
+    [Authorize]
+    public IActionResult AddAddress([FromBody] AddAddressDto address)
+    {
+        var userId = User.FindFirst("UserId")?.Value;
+        if (userId == null) return Unauthorized("You are not logged in");
+        _addressService.AddAddress(address, int.Parse(userId));
         return Ok("Successfully added new address");
     }
 
-    [HttpDelete("DeleteAddress")]
+    [HttpDelete("DeleteAddress/{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
-        _addressService.Delete(id);
+        var userId = User.FindFirst("UserId")?.Value;
+        if (userId == null) return Unauthorized("You are not logged in");
+        _addressService.Delete(int.Parse(userId), id);
         return Ok("Successfully deleted address");
     }
 }

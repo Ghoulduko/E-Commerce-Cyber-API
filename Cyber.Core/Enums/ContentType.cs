@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cyber.Core.Enums;
 
-public enum Brand
+public enum ContentType
 {
-    Apple,
-    Samsung,
-    Xiaomi,
-    Poco,
-    Honor,
-    Nokia,
-    Realme,
+    About,
+    Products,
+    BestSale,
 }

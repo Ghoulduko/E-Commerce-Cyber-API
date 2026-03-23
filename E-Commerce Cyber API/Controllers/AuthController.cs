@@ -16,10 +16,10 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpGet("Login")]
-    public string Login(LoginUserDto request)
+    [HttpPost("Login")]
+    public IActionResult Login([FromBody] LoginUserDto request)
     {
-        var jwtKey = _authService.Login(request);
-        return jwtKey;
+        var token = _authService.Login(request);
+        return Ok(new { token });
     }
 }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cyber.Core.Migrations
 {
     [DbContext(typeof(CyberDbContext))]
-    [Migration("20260226103028_CreatedBase")]
-    partial class CreatedBase
+    [Migration("20260226104949_CreatedDatabase")]
+    partial class CreatedDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -4,6 +4,7 @@ using Cyber.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cyber.Core.Migrations
 {
     [DbContext(typeof(CyberDbContext))]
-    partial class CyberDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260303091541_AddedContentTypeToProduct")]
+    partial class AddedContentTypeToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,51 +74,6 @@ namespace Cyber.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brands");
-                });
-
-            modelBuilder.Entity("Cyber.Core.Entities.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("Cyber.Core.Entities.CartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Cyber.Core.Entities.MediaFile", b =>
@@ -247,40 +205,10 @@ namespace Cyber.Core.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Cyber.Core.Entities.Cart", b =>
-                {
-                    b.HasOne("Cyber.Core.Entities.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("Cyber.Core.Entities.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Cyber.Core.Entities.CartItem", b =>
-                {
-                    b.HasOne("Cyber.Core.Entities.Cart", "Cart")
-                        .WithMany("CartItems")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cyber.Core.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Cyber.Core.Entities.Product", b =>
                 {
                     b.HasOne("Cyber.Core.Entities.Brand", "Brand")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -299,16 +227,6 @@ namespace Cyber.Core.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Cyber.Core.Entities.Brand", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Cyber.Core.Entities.Cart", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("Cyber.Core.Entities.Role", b =>
                 {
                     b.Navigation("Users");
@@ -317,8 +235,6 @@ namespace Cyber.Core.Migrations
             modelBuilder.Entity("Cyber.Core.Entities.User", b =>
                 {
                     b.Navigation("Addresses");
-
-                    b.Navigation("Cart");
                 });
 #pragma warning restore 612, 618
         }

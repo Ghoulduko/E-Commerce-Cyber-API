@@ -18,10 +18,11 @@ public class GlobalExceptionMiddleware
         catch (Exception ex)
         {
             Console.WriteLine("An error occured while requesting endpoint");
+            context.Response.StatusCode = ex is ArgumentException ? 400 : 500;
             var response = new
             {
-                Message = $"Error message: {ex.Message}",
-                StatusCode = 500,
+                Message = ex.Message,
+                StatusCode = context.Response.StatusCode,
                 Details = "An error occurred while processing your request. Please try again later."
             };
             await context.Response.WriteAsJsonAsync(response);

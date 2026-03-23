@@ -1,5 +1,6 @@
 ﻿using Cyber.Application.Dtos.Role;
 using Cyber.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost("AddRole")]
+    [Authorize(Roles = "SUPERADMIN")]
     public IActionResult Add(AddRoleDto request)
     {
         _roleService.AddRole(request);
@@ -24,12 +26,14 @@ public class RoleController : ControllerBase
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "SUPERADMIN")]
     public IActionResult GetAll()
     {
         return Ok(_roleService.GetAllRoles());
     }
 
     [HttpGet("GetRoleByName")]
+    [Authorize(Roles = "SUPERADMIN")]
     public IActionResult Get(string name)
     {
         var role = _roleService.GetRoleByName(name);
@@ -37,6 +41,7 @@ public class RoleController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize(Roles = "SUPERADMIN")]
     public IActionResult Delete(string name)
     {
         _roleService.DeleteRole(name);

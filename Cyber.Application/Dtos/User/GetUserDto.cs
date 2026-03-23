@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cyber.Application.Dtos.User;
 
-public class UserDto
+public class GetUserDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }

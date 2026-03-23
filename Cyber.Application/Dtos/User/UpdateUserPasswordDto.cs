@@ -8,7 +8,6 @@ namespace Cyber.Application.Dtos.User;
 
 public class UpdateUserPasswordDto
 {
-    public int Id { get; set; }
     public required string CurrentPassword { get; set; }
     public required string NewPassword { get; set; }
 }

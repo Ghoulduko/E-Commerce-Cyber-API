@@ -5,7 +5,7 @@
 namespace Cyber.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedBase : Migration
+    public partial class CreatedDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

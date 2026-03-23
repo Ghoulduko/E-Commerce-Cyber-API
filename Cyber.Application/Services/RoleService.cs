@@ -14,48 +14,46 @@ namespace Cyber.Application.Services;
 
 public class RoleService
 {
-    private readonly CyberDbContext _context;
     private readonly GenericService<Role> _service;
     private readonly IMapper _mapper;
 
-    public RoleService(GenericService<Role> userService, CyberDbContext context, IMapper mapper)
+    public RoleService(GenericService<Role> userService, IMapper mapper)
     {
         _service = userService;
-        _context = context;
         _mapper = mapper;
     }
 
-    public void AddRole(AddRoleDto request)
+    public async Task AddRole(AddRoleDto request)
     {
         request.RoleName = request.RoleName.Trim().ToUpper();
 
-        var role = _context.Roles.SingleOrDefault(r => r.RoleName == request.RoleName);
+        var role = _service.Get(r => r.RoleName == request.RoleName);
         if (role != null) throw new Exception("The role already exists");
         var roleToAdd = _mapper.Map<Role>(request);
-        _service.Add(roleToAdd);
+        await _service.Add(roleToAdd);
     }
 
-    public RoleDto GetRoleByName(string name)
+    public async Task<RoleDto> GetRoleByName(string name)
     {
-        var role = _context.Roles.SingleOrDefault(r => r.RoleName == name);
+        var role = await _service.Get(r => r.RoleName == name);
         if (role == null) throw new ArgumentNullException("No role found with the provided name");
         var roleToReturn = _mapper.Map<RoleDto>(role);
         return roleToReturn;
     }
 
-    public List<RoleDto> GetAllRoles()
+    public async Task<List<RoleDto>> GetAllRoles()
     {
-        var roles = _service.GetAll();
+        var roles = await _service.GetAll();
         var rolesToReturn = _mapper.Map<List<RoleDto>>(roles);
         return rolesToReturn;
     }
 
-    public void DeleteRole(string name)
+    public async Task DeleteRole(string name)
     {
         name = name.Trim().ToUpper();
 
-        var role = _context.Roles.SingleOrDefault(r => r.RoleName == name);
+        var role = _service.Get(r => r.RoleName == name);
         if (role == null) throw new ArgumentNullException("No role found with the provided name");
-        _service.Delete(role.Id);
+        await _service.Delete(role.Id);
     }
 }

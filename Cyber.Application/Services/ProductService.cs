@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Cyber.Application.Dtos;
+using Cyber.Application.Dtos.Product;
 using Cyber.Core.Database;
 using Cyber.Core.Entities;
 using Cyber.Core.Enums;
+using Cyber.Core.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,53 +15,77 @@ namespace Cyber.Application.Services;
 
 public class ProductService
 {
-    private readonly CyberDbContext _dbContext;
+    private readonly GenericService<Product> _service;
     private readonly IMapper _mapper;
 
-    public ProductService(CyberDbContext dbContext, IMapper mapper)
+    public ProductService(GenericService<Product> service, IMapper mapper)
     {
-        _dbContext = dbContext;
+        _service = service;
         _mapper = mapper;
     }
 
-    public List<Product> GetAllProducts()
+    public async Task<List<ProductDto>> GetAllProducts()
     {
-        return _dbContext.Products.ToList();
+        var products = _service.GetAll();
+        var productsToReturn = _mapper.Map<List<ProductDto>>(products);
+        return productsToReturn;
     }
 
-    public List<Product> GetFilteredProducts(string name, Brand brand, decimal price)
+    public async Task<List<ProductDto>> GetProductsByContentType(ContentType type)
     {
-        var products = _dbContext.Products.Where(p => p.Name.Contains(name) && p.Brand == brand && p.Price <= price).ToList();
-        return products;
+        var products = await _service.Filter(p => p.ContentType == type);
+        var productsToReturn = _mapper.Map<List<ProductDto>>(products);
+        return productsToReturn;
     }
 
-    public void AddProduct(Product product)
+    public async Task<ProductDto> GetProductById(int id)
     {
-        if (product == null) throw new ArgumentNullException("Your entered product is invalid, Try again");
+        var product = await _service.GetById(id);
+        if (product == null) 
+            throw new ArgumentNullException("No product found, try again!");
+        var productToReturn = _mapper.Map<ProductDto>(product);
+        return productToReturn;
+    }
+
+    public async Task<List<ProductDto>> GetFilteredProducts(GetFilteredProductDto req)
+    {
+
+        var products = await _service.Filter(p => p.Name.Contains(req.Name) && p.BrandId == req.BrandId && (p.Price >= req.PriceFrom && p.Price <= req.PriceTo));
+        var productsToReturn = _mapper.Map<List<ProductDto>>(products);
+        return productsToReturn;
+    }
+
+    public async Task AddProduct(ProductDto product)
+    {
+        product.Name = product.Name.Trim();
+        bool productExist = await _service.CheckExistence(p => p.Name.ToLower() == product.Name.ToLower() && p.ContentType == product.ContentType);
+        if (productExist) 
+            throw new ArgumentException("The product already exists");
+
+        if (product == null)
+            throw new ArgumentNullException("Your entered product is invalid, Try again");
         
-        _dbContext.Products.Add(product);
-        _dbContext.SaveChanges();
+        var productToAdd = _mapper.Map<Product>(product);
+        await _service.Add(productToAdd);
     }
 
-    public void UpdateProduct(int id, Product product)
+    public async Task UpdateProduct(int id, Product product)
     {
-        var productToUpdate = _dbContext.Products.SingleOrDefault(p => p.Id == id);
+        var productToUpdate = _service.GetById(id);
 
         if (productToUpdate == null)
             throw new ArgumentNullException($"No Product was found with the id of: {id}.");
 
-        _mapper.Map(product, productToUpdate);
-
-        _dbContext.SaveChanges();
+        await _mapper.Map(product, productToUpdate);
+        await _service.Save();
     }
 
-    public void DeleteProduct(int id)
+    public async Task DeleteProduct(int id)
     {
-        var productToDelete = _dbContext.Products.SingleOrDefault(p => p.Id == id);
+        var productToDelete = _service.GetById(id);
         if (productToDelete == null)
             throw new ArgumentNullException($"No Product was found to delete with the id of: {id}.");
 
-        _dbContext.Products.Remove(productToDelete);
-        _dbContext.SaveChanges();
+        await _service.Delete(id);
     }
 }

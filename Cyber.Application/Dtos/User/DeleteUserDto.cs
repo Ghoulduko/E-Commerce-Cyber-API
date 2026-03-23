@@ -8,6 +8,5 @@ namespace Cyber.Application.Dtos.User;
 
 public class DeleteUserDto
 {
-    public int Id { get; set; }
     public required string Password { get; set; }
 }

@@ -16,11 +16,16 @@ public class Product
     [Key]
     public int Id { get; set; }
     public required string Name { get; set; }
-    public required Brand Brand { get; set; }
-    public required string Description { get; set; }
 
-    [Precision(4,2)]
+    [ForeignKey("BrandId")]
+    public required int BrandId { get; set; }
+    public required string Description { get; set; }
+    public required ContentType ContentType { get; set; }
+
+    [Precision(6,2)]
     public required decimal Price { get; set; }
     public bool IsInStock { get; set; }
     public required string ImageUrl { get; set; }
+
+    public Brand? Brand { get; set; }
 }

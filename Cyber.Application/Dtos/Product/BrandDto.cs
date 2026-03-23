@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cyber.Application.Dtos.User;
+namespace Cyber.Application.Dtos.Product;
 
-public class UserDto
+public class BrandDto
 {
-    public int Id { get; set; }
     public required string Name { get; set; }
-    public required string Email { get; set; }
 }
