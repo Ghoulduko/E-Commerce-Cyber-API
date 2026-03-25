@@ -20,30 +20,30 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("AllProducts")]
-    public IActionResult GetAllProducts()
+    public async Task<IActionResult> GetAllProducts()
     {
-        var products = _productService.GetAllProducts();
+        var products = await _productService.GetAllProducts();
         return Ok(products);
     }
 
     [HttpGet("ProductsByContentType/{type}")]
-    public IActionResult GetProducts(ContentType type)
+    public async Task<IActionResult> GetProducts(ContentType type)
     {
-        var products = _productService.GetProductsByContentType(type);
+        var products = await _productService.GetProductsByContentType(type);
         return Ok(products);
     }
 
     [HttpGet("ProductsById/{id}")]
-    public IActionResult GetProductById(int id)
+    public async Task<IActionResult> GetProductById(int id)
     {
-        var product = _productService.GetProductById(id);
+        var product = await _productService.GetProductById(id);
         return Ok(product);
     }
 
     [HttpPost("FilteredProducts")]
-    public IActionResult GetFilteredProducts([FromBody] GetFilteredProductDto req)
+    public async Task<IActionResult> GetFilteredProducts([FromBody] GetFilteredProductDto req)
     {
-        var products = _productService.GetFilteredProducts(req);
+        var products = await _productService.GetFilteredProducts(req);
         return Ok(products);
     }
 }

@@ -17,12 +17,14 @@ public class FileController : ControllerBase
     private readonly CyberDbContext _context;
     private readonly ProductService _productService;
     private readonly FileService _fileService;
+    private readonly IConfiguration _configuration;
 
-    public FileController(CyberDbContext context, ProductService productService, FileService fileService)
+    public FileController(CyberDbContext context, ProductService productService, FileService fileService, IConfiguration configuration)
     {
         _context = context;
         _productService = productService;
         _fileService = fileService;
+        _configuration = configuration;
     }
 
     [HttpPost("UploadProduct")]
@@ -44,6 +46,8 @@ public class FileController : ControllerBase
 
         await _fileService.AddImage(req);
 
+        var url = _configuration["ProductLink"];
+
         var product = new ProductDto
         {
             Name = productRequest.Name,
@@ -52,7 +56,7 @@ public class FileController : ControllerBase
             ContentType = type,
             Price = productRequest.Price,
             IsInStock = productRequest.IsInStock,
-            ImageUrl = $"https://localhost:7054/api/File/Download?Identificator={identificator}"
+            ImageUrl = $"{url}{identificator}"
         };
 
         await _productService.AddProduct(product);
@@ -60,21 +64,21 @@ public class FileController : ControllerBase
         return Ok(req);
     }
 
-    //[HttpGet("Download")]
-    //public IActionResult Download(Guid Identificator)
-    //{
-    //    var fromdb = _context.MediaFiles.FirstOrDefault(i => i.Identificator == Identificator);
+    [HttpGet("Download")]
+    public IActionResult Download(Guid Identificator)
+    {
+        var fromdb = _context.MediaFiles.FirstOrDefault(i => i.Identificator == Identificator);
 
-    //    if (fromdb is null) return NotFound("no file store");
+        if (fromdb is null) return NotFound("no file store");
 
-    //    return File(fromdb.Content, fromdb.FileType, Guid.NewGuid() + fromdb.FileName);
-    //}
+        return File(fromdb.Content, fromdb.FileType, Guid.NewGuid() + fromdb.FileName);
+    }
 
-    //[HttpPost("GetViews")]
-    //public IActionResult GetView(List<ContentType> types)
-    //{
-    //    var pictures = _context.MediaFiles
-    //        .Where(i => types.Any(j => j == i.ContentType)).Select(i => i.Identificator);
-    //    return Ok(pictures);
-    //}
+    [HttpPost("GetViews")]
+    public IActionResult GetView(List<ContentType> types)
+    {
+        var pictures = _context.MediaFiles
+            .Where(i => types.Any(j => j == i.ContentType)).Select(i => i.Identificator);
+        return Ok(pictures);
+    }
 }

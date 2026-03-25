@@ -18,68 +18,68 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("SignUp")]
-    public IActionResult Add([FromBody] AddUserDto user)
+    public async Task<IActionResult> Add([FromBody] AddUserDto user)
     {
-        var token = _userService.AddUser(user);
+        var token = await _userService.AddUser(user);
         return Ok(new { token });
 
     }
 
     [HttpGet("GetAll")]
     [Authorize(Roles = "ADMIN,SUPERADMIN")]
-    public IActionResult GetUsers()
+    public async Task<IActionResult> GetUsers()
     {
-        var users = _userService.GetAll();
+        var users = await _userService.GetAll();
         return Ok(users);
     }
 
     [HttpGet("GetProfile")]
     [Authorize(Roles = "USER,ADMIN,SUPERADMIN")]
-    public IActionResult GetProfile()
+    public async Task<IActionResult> GetProfile()
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) return Unauthorized("You are not logged in");
-        var user = _userService.GetUserById(int.Parse(userId));
+        var user = await _userService.GetUserById(int.Parse(userId));
         return Ok(user);
     }
 
     [HttpGet("GetById/{id}")]
     [Authorize(Roles = "ADMIN,SUPERADMIN")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var user = _userService.GetUserById(id);
+        var user = await _userService.GetUserById(id);
         if (user == null) return NotFound("User not found");
         return Ok(user);
     }
 
     [HttpGet("GetByEmail/{email}")]
     [Authorize(Roles = "ADMIN,SUPERADMIN")]
-    public IActionResult GetByEmail(string email)
+    public async Task<IActionResult> GetByEmail(string email)
     {
-        var user = _userService.GetUserByEmail(email);
+        var user = await _userService.GetUserByEmail(email);
         if (user == null) return NotFound("User not found");
         return Ok(user);
     }
 
     [HttpPatch("UpdatePassword")]
     [Authorize]
-    public IActionResult Update([FromBody] UpdateUserPasswordDto req)
+    public async Task<IActionResult> Update([FromBody] UpdateUserPasswordDto req)
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) return Unauthorized("You are not logged in");
 
-        _userService.UpdatePassword(int.Parse(userId), req);
+        await _userService.UpdatePassword(int.Parse(userId), req);
         return Ok("Password updated successfully");
     }
 
     [HttpDelete("DeleteAccount")]
     [Authorize]
-    public IActionResult DeleteAccount([FromBody] DeleteUserDto req)
+    public async Task<IActionResult> DeleteAccount([FromBody] DeleteUserDto req)
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) return Unauthorized("You are not logged in");
 
-        _userService.DeleteAccount(int.Parse(userId),req);
+        await _userService.DeleteAccount(int.Parse(userId),req);
         return Ok("Account deleted successfully");
     }
 }

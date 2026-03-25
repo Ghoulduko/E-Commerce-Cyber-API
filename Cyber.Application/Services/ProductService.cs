@@ -26,7 +26,7 @@ public class ProductService
 
     public async Task<List<ProductDto>> GetAllProducts()
     {
-        var products = _service.GetAll();
+        var products = await _service.GetAll();
         var productsToReturn = _mapper.Map<List<ProductDto>>(products);
         return productsToReturn;
     }
@@ -71,18 +71,18 @@ public class ProductService
 
     public async Task UpdateProduct(int id, Product product)
     {
-        var productToUpdate = _service.GetById(id);
+        var productToUpdate = await _service.GetById(id);
 
         if (productToUpdate == null)
             throw new ArgumentNullException($"No Product was found with the id of: {id}.");
 
-        await _mapper.Map(product, productToUpdate);
+        _mapper.Map(product, productToUpdate);
         await _service.Save();
     }
 
     public async Task DeleteProduct(int id)
     {
-        var productToDelete = _service.GetById(id);
+        var productToDelete = await _service.GetById(id);
         if (productToDelete == null)
             throw new ArgumentNullException($"No Product was found to delete with the id of: {id}.");
 

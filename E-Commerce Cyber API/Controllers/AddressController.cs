@@ -20,47 +20,47 @@ public class AddressController : ControllerBase
 
     [HttpGet("GetAll")]
     [Authorize(Roles = "ADMIN,SUPERADMIN")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var allAddresses = _addressService.GetAll();
+        var allAddresses = await _addressService.GetAll();
         return Ok(allAddresses);
     }
 
     [HttpGet("GetAddressById/{id}")]
     [Authorize(Roles = "ADMIN,SUPERADMIN")]
-    public IActionResult Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
-        var address = _addressService.GetById(id);
+        var address = await _addressService.GetById(id);
         return Ok(address);
     }
 
     [HttpGet("GetUserAddresses")]
     [Authorize]
-    public IActionResult GetUserAddresses()
+    public async Task<IActionResult> GetUserAddresses()
     {
         var userId = User.FindFirst("UserId")?.Value;
         if(userId == null) return Unauthorized("You are not logged in");
-        var addresses = _addressService.GetUserAddresses(int.Parse(userId));
+        var addresses = await _addressService.GetUserAddresses(int.Parse(userId));
         return Ok(addresses);
     }
 
     [HttpPost("AddAddress")]
     [Authorize]
-    public IActionResult AddAddress([FromBody] AddAddressDto address)
+    public async Task<IActionResult> AddAddress([FromBody] AddAddressDto address)
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) return Unauthorized("You are not logged in");
-        _addressService.AddAddress(address, int.Parse(userId));
+        await _addressService.AddAddress(address, int.Parse(userId));
         return Ok("Successfully added new address");
     }
 
     [HttpDelete("DeleteAddress/{id}")]
     [Authorize]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) return Unauthorized("You are not logged in");
-        _addressService.Delete(int.Parse(userId), id);
+        await _addressService.Delete(int.Parse(userId), id);
         return Ok("Successfully deleted address");
     }
 }

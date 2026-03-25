@@ -19,32 +19,32 @@ public class RoleController : ControllerBase
 
     [HttpPost("AddRole")]
     [Authorize(Roles = "SUPERADMIN")]
-    public IActionResult Add(AddRoleDto request)
+    public async Task<IActionResult> Add(AddRoleDto request)
     {
-        _roleService.AddRole(request);
+        await _roleService.AddRole(request);
         return Ok("Role added successfully");
     }
 
     [HttpGet("GetAll")]
     [Authorize(Roles = "SUPERADMIN")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return Ok(_roleService.GetAllRoles());
+        return Ok(await _roleService.GetAllRoles());
     }
 
     [HttpGet("GetRoleByName")]
     [Authorize(Roles = "SUPERADMIN")]
-    public IActionResult Get(string name)
+    public async Task<IActionResult> Get(string name)
     {
-        var role = _roleService.GetRoleByName(name);
+        var role = await _roleService.GetRoleByName(name);
         return Ok(role);
     }
 
     [HttpDelete]
     [Authorize(Roles = "SUPERADMIN")]
-    public IActionResult Delete(string name)
+    public async Task<IActionResult> Delete(string name)
     {
-        _roleService.DeleteRole(name);
+        await _roleService.DeleteRole(name);
         return Ok("Deleted role successfully!");
     }
 }
