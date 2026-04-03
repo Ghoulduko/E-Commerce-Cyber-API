@@ -26,6 +26,13 @@ public class ProductController : ControllerBase
         return Ok(products);
     }
 
+    [HttpGet("PaginatedProducts")]
+    public async Task<IActionResult> GetPaginatedProducts([FromQuery] int page)
+    {
+        var products = await _productService.PaginatedProducts(page);
+        return Ok(products);
+    }
+
     [HttpGet("ProductsByContentType/{type}")]
     public async Task<IActionResult> GetProducts(ContentType type)
     {

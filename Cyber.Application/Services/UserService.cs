@@ -28,10 +28,11 @@ public class UserService
 
     public async Task<string> AddUser(AddUserDto user)
     {
-        var existingUser = _service.Get(u => u.Email == user.Email);
+        var existingUser = await _service.Get(u => u.Email == user.Email);
         if (existingUser != null) throw new ArgumentException("An account with that email already exists");
         if (user.Password.Length < 8) throw new ArgumentException("Password must be atleast 8 characters long");
         if (user.Name.Length < 4) throw new ArgumentException("Name must be atleast 4 characters long");
+
         var userToAdd = new User
         {
             Email = user.Email,
@@ -39,6 +40,7 @@ public class UserService
             Password = BC.EnhancedHashPassword(user.Password, 13),
             RoleId = 1,
         };
+
         await _service.Add(userToAdd);
 
         var cart = new Cart

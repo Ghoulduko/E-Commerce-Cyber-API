@@ -1,24 +1,18 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos;
 using Cyber.Application.Dtos.Product;
-using Cyber.Core.Database;
 using Cyber.Core.Entities;
 using Cyber.Core.Enums;
 using Cyber.Core.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cyber.Application.Services;
 
 public class ProductService
 {
-    private readonly GenericService<Product> _service;
+    private readonly ProductRepository _service;
     private readonly IMapper _mapper;
 
-    public ProductService(GenericService<Product> service, IMapper mapper)
+    public ProductService(ProductRepository service, IMapper mapper)
     {
         _service = service;
         _mapper = mapper;
@@ -42,17 +36,21 @@ public class ProductService
     {
         var product = await _service.GetById(id);
         if (product == null) 
-            throw new ArgumentNullException("No product found, try again!");
+            throw new InvalidOperationException("No product found, try again!");
         var productToReturn = _mapper.Map<ProductDto>(product);
         return productToReturn;
     }
 
     public async Task<List<ProductDto>> GetFilteredProducts(GetFilteredProductDto req)
     {
-
-        var products = await _service.Filter(p => p.Name.Contains(req.Name) && p.BrandId == req.BrandId && (p.Price >= req.PriceFrom && p.Price <= req.PriceTo));
+        var products = await _service.Filter(p => req.Name != null && p.Name.Contains(req.Name) && p.BrandId == req.BrandId && (p.Price >= req.PriceFrom && p.Price <= req.PriceTo));
         var productsToReturn = _mapper.Map<List<ProductDto>>(products);
         return productsToReturn;
+    }
+
+    public async Task<object> PaginatedProducts(int page)
+    {
+        return await _service.PaginateProducts(page);
     }
 
     public async Task AddProduct(ProductDto product)
@@ -63,7 +61,7 @@ public class ProductService
             throw new ArgumentException("The product already exists");
 
         if (product == null)
-            throw new ArgumentNullException("Your entered product is invalid, Try again");
+            throw new InvalidOperationException("Your entered product is invalid, Try again");
         
         var productToAdd = _mapper.Map<Product>(product);
         await _service.Add(productToAdd);

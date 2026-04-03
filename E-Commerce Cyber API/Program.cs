@@ -49,6 +49,7 @@ builder.Services.AddScoped<GenericService<MediaFile>>();
 builder.Services.AddScoped<GenericService<Cart>>();
 builder.Services.AddScoped<GenericService<CartItem>>();
 builder.Services.AddScoped<CartRepository>();
+builder.Services.AddScoped<ProductRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -107,18 +108,21 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenAnyIP(7054);
-});
+//builder.WebHost.UseKestrel(options =>
+//{
+//    options.ListenAnyIP(7054);
+//});
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if(app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseHttpsRedirection();
-app.UseCors("AngularPolicy");   // ?? THIS FIXES YOUR ERROR
+app.UseCors("AngularPolicy");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

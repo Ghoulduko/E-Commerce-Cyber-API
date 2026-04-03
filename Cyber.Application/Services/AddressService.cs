@@ -1,14 +1,7 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.Address;
-using Cyber.Core.Database;
 using Cyber.Core.Entities;
 using Cyber.Core.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cyber.Application.Services;
 
@@ -22,7 +15,7 @@ public class AddressService
         _genericAddressService = addressService;
         _mapper = mapper;
     }
-
+    
     public async Task AddAddress(AddAddressDto address, int userId)
     {
         var addressToAdd = _mapper.Map<Address>(address);
