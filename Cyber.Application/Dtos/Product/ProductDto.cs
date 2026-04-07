@@ -18,6 +18,8 @@ public class ProductDto
     public required string Description { get; set; }
     public required ContentType ContentType { get; set; }
     public required decimal Price { get; set; }
+    
+    public bool IsFavorite { get; set; } = false;
     public bool IsInStock { get; set; }
     public string? ImageUrl { get; set; }
 }

@@ -22,7 +22,7 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> Add(AddRoleDto request)
     {
         await _roleService.AddRole(request);
-        return Ok("Role added successfully");
+        return Ok(new { message = "Role added successfully" });
     }
 
     [HttpGet("GetAll")]
@@ -32,7 +32,7 @@ public class RoleController : ControllerBase
         return Ok(await _roleService.GetAllRoles());
     }
 
-    [HttpGet("GetRoleByName")]
+    [HttpGet("GetRoleByName/${name}")]
     [Authorize(Roles = "SUPERADMIN")]
     public async Task<IActionResult> Get(string name)
     {
@@ -40,11 +40,11 @@ public class RoleController : ControllerBase
         return Ok(role);
     }
 
-    [HttpDelete]
+    [HttpDelete("DeleteByName/${name}")]
     [Authorize(Roles = "SUPERADMIN")]
     public async Task<IActionResult> Delete(string name)
     {
         await _roleService.DeleteRole(name);
-        return Ok("Deleted role successfully!");
+        return Ok(new  { message = "Role deleted successfully" });
     }
 }

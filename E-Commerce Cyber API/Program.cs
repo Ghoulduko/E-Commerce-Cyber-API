@@ -45,6 +45,7 @@ builder.Services.AddScoped<GenericService<Address>>();
 builder.Services.AddScoped<GenericService<User>>();
 builder.Services.AddScoped<GenericService<Role>>();
 builder.Services.AddScoped<GenericService<Product>>();
+builder.Services.AddScoped<GenericService<FavoriteProduct>>();
 builder.Services.AddScoped<GenericService<MediaFile>>();
 builder.Services.AddScoped<GenericService<Cart>>();
 builder.Services.AddScoped<GenericService<CartItem>>();

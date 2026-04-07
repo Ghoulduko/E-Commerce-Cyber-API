@@ -14,6 +14,7 @@ public class CyberDbContext : DbContext
     public CyberDbContext(DbContextOptions<CyberDbContext> options) : base(options) { }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Role> Roles { get; set; }

@@ -12,11 +12,10 @@ namespace Cyber.Core.Helper;
 
 public class CartRepository : GenericService<Cart>
 {
-    public CartRepository(CyberDbContext context, IMapper mapper) : base(context, mapper)
+    public CartRepository(CyberDbContext context, IMapper mapper) : base(context)
     {
 
     }
-
 
     public async Task<Cart?> GetCartWithItems(int userId)
     {

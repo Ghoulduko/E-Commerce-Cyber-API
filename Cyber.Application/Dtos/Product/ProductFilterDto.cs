@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Cyber.Application.Dtos.Product;
 
-public class GetFilteredProductDto
+public class ProductFilterDto
 {
-    public string? Name { get; set; }
+    // public string? Name { get; set; }
     public required int BrandId { get; set; }
     [Precision(6, 2)]
     public decimal PriceFrom { get; set; }

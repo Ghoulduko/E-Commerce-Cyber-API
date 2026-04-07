@@ -14,13 +14,11 @@ public class GenericService<T> where T : class
 {
     protected readonly CyberDbContext _context;
     private readonly DbSet<T> _dbSet;
-    private readonly IMapper _mapper;
 
-    public GenericService(CyberDbContext context, IMapper mapper)
+    public GenericService(CyberDbContext context)
     {
         _context = context;
         _dbSet = _context.Set<T>();
-        _mapper = mapper;
     }
 
     public async Task Add(T entity)
@@ -39,17 +37,16 @@ public class GenericService<T> where T : class
         return await _dbSet.SingleOrDefaultAsync(predicate);
     }
 
-    public async Task<T> GetById(int id)
+    public async Task<T?> GetById(int id)
     {
         var entity = await _dbSet.FindAsync(id);
-        if (entity == null) throw new ArgumentNullException("item not found");
         return entity;
     }
 
     public async Task Delete(int id)
     {
         var itemToDelete = await GetById(id);
-        if (itemToDelete == null) throw new ArgumentNullException("item not found");
+        if (itemToDelete == null) throw new Exception("item not found");
         _dbSet.Remove(itemToDelete);
         await _context.SaveChangesAsync();
     }
@@ -58,7 +55,6 @@ public class GenericService<T> where T : class
     {
         return await _dbSet.Where(predicate).ToListAsync();
     }
-
 
     public async Task<bool> CheckExistence(Expression<Func<T, bool>> predicate)
     {

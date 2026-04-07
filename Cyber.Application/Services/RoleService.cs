@@ -27,7 +27,7 @@ public class RoleService
     {
         request.RoleName = request.RoleName.Trim().ToUpper();
 
-        var role = _service.Get(r => r.RoleName == request.RoleName);
+        var role = await _service.Get(r => r.RoleName == request.RoleName);
         if (role != null) throw new Exception("The role already exists");
         var roleToAdd = _mapper.Map<Role>(request);
         await _service.Add(roleToAdd);
@@ -52,7 +52,7 @@ public class RoleService
     {
         name = name.Trim().ToUpper();
 
-        var role = _service.Get(r => r.RoleName == name);
+        var role = await _service.Get(r => r.RoleName == name);
         if (role == null) throw new ArgumentNullException("No role found with the provided name");
         await _service.Delete(role.Id);
     }

@@ -15,6 +15,10 @@ public class MappingProfile : Profile
     {
         CreateMap<Product, Product>();
         CreateMap<ProductDto, Product>().ReverseMap();
+        
+        // Favorite Products mapping
+        CreateMap<FavoriteProduct, FavoriteProductDto>().ReverseMap();
+        CreateMap<AddFavoriteProductDto, FavoriteProductDto>().ReverseMap();
 
         // Address mapping
         CreateMap<Address, AddressDto>().ReverseMap();
