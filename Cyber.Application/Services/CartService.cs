@@ -109,4 +109,9 @@ public class CartService
 
         await _cartItemService.Save();
     }
+
+    public async Task ClearCart(int userId)
+    {
+        await _cartRepository.ClearCart(userId);
+    }
 }

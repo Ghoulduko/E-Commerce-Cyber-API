@@ -21,8 +21,8 @@ public class UserService
     public UserService(GenericService<User> userService, GenericService<Cart> cartService, AuthService authService, IMapper mapper)
     {
         _service = userService;
-        _authService = authService;
         _cartService = cartService;
+        _authService = authService;
         _mapper = mapper;
     }
 
@@ -39,6 +39,7 @@ public class UserService
             Name = user.Name,
             Password = BC.EnhancedHashPassword(user.Password, 13),
             RoleId = 1,
+            Shippings = new List<Shipping>()
         };
 
         await _service.Add(userToAdd);

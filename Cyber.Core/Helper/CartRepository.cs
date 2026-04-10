@@ -31,4 +31,16 @@ public class CartRepository : GenericService<Cart>
     {
         return await _context.Carts.Include(c => c.CartItems).SingleOrDefaultAsync(c => c.UserId == userId);
     }
+    
+    public async Task ClearCart(int userId)
+    {
+        var cart = await _context.Carts
+            .Include(c => c.CartItems)
+            .SingleOrDefaultAsync(c => c.UserId == userId);
+    
+        if (cart == null) return;
+    
+        _context.CartItems.RemoveRange(cart.CartItems);
+        await _context.SaveChangesAsync();
+    }
 }

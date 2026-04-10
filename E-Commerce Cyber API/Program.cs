@@ -41,6 +41,7 @@ builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<CacheService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<ShippingService>();
 builder.Services.AddScoped<GenericService<Address>>();
 builder.Services.AddScoped<GenericService<User>>();
 builder.Services.AddScoped<GenericService<Role>>();
@@ -49,8 +50,10 @@ builder.Services.AddScoped<GenericService<FavoriteProduct>>();
 builder.Services.AddScoped<GenericService<MediaFile>>();
 builder.Services.AddScoped<GenericService<Cart>>();
 builder.Services.AddScoped<GenericService<CartItem>>();
+builder.Services.AddScoped<GenericService<Shipping>>();
 builder.Services.AddScoped<CartRepository>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<ShippingRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

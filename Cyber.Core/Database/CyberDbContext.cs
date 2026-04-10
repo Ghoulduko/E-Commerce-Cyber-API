@@ -12,6 +12,33 @@ namespace Cyber.Core.Database;
 public class CyberDbContext : DbContext
 {
     public CyberDbContext(DbContextOptions<CyberDbContext> options) : base(options) { }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Shipping>()
+            .HasOne(s => s.ShippingAddress)
+            .WithMany()
+            .HasForeignKey(s => s.ShippingAddressId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Address>()
+            .HasOne(a => a.User)
+            .WithMany(u => u.Addresses)
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Shipping>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.Shippings)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Shipping>()
+            .Property(s => s.Cost)
+            .HasPrecision(18, 2);
+    }
 
     public DbSet<Product> Products { get; set; }
     public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
@@ -22,4 +49,7 @@ public class CyberDbContext : DbContext
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    
+    public DbSet<Shipping> Shippings { get; set; }
+    public DbSet<ShippingItem> ShippingItems { get; set; }
 }

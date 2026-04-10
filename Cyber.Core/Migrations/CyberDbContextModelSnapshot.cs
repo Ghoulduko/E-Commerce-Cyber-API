@@ -229,6 +229,65 @@ namespace Cyber.Core.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("Cyber.Core.Entities.Shipping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Cost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ShippingAddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShippingStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShippingAddressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shippings");
+                });
+
+            modelBuilder.Entity("Cyber.Core.Entities.ShippingItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShippingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ShippingId");
+
+                    b.ToTable("ShippingItems");
+                });
+
             modelBuilder.Entity("Cyber.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -264,7 +323,7 @@ namespace Cyber.Core.Migrations
                     b.HasOne("Cyber.Core.Entities.User", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -330,6 +389,44 @@ namespace Cyber.Core.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("Cyber.Core.Entities.Shipping", b =>
+                {
+                    b.HasOne("Cyber.Core.Entities.Address", "ShippingAddress")
+                        .WithMany()
+                        .HasForeignKey("ShippingAddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cyber.Core.Entities.User", "User")
+                        .WithMany("Shippings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShippingAddress");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cyber.Core.Entities.ShippingItem", b =>
+                {
+                    b.HasOne("Cyber.Core.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cyber.Core.Entities.Shipping", "Shipping")
+                        .WithMany("ShippingItems")
+                        .HasForeignKey("ShippingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Shipping");
+                });
+
             modelBuilder.Entity("Cyber.Core.Entities.User", b =>
                 {
                     b.HasOne("Cyber.Core.Entities.Role", "Role")
@@ -356,11 +453,18 @@ namespace Cyber.Core.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("Cyber.Core.Entities.Shipping", b =>
+                {
+                    b.Navigation("ShippingItems");
+                });
+
             modelBuilder.Entity("Cyber.Core.Entities.User", b =>
                 {
                     b.Navigation("Addresses");
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Shippings");
                 });
 #pragma warning restore 612, 618
         }

@@ -40,7 +40,6 @@ public class ProductRepository : GenericService<Product>
             paginatedProducts = products,
             totalPages = (int)Math.Ceiling((double)total / 9) - 1,
             currentPage = page,
-            //totalProducts = total
         };
     }
 

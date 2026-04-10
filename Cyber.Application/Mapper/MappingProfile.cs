@@ -4,6 +4,7 @@ using Cyber.Application.Dtos.Address;
 using Cyber.Application.Dtos.Cart;
 using Cyber.Application.Dtos.Product;
 using Cyber.Application.Dtos.Role;
+using Cyber.Application.Dtos.Shipping;
 using Cyber.Application.Dtos.User;
 using Cyber.Core.Entities;
 
@@ -40,5 +41,11 @@ public class MappingProfile : Profile
         CreateMap<Cart, CartDto>().ReverseMap();
         CreateMap<CartItem, CartItemDto>().ReverseMap();
         CreateMap<AddItemToCartDto, CartItem>();
+        
+        // Shipping mapping
+        CreateMap<Shipping, ShippingDto>().ReverseMap();
+        CreateMap<ShippingItem, ShippingItemDto>().ReverseMap();
+        CreateMap<ShippingItemDto, CartItemDto>().ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

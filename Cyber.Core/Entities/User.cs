@@ -17,10 +17,10 @@ public class User
     public required string Email { get; set; }
     public required string Password { get; set; }
 
-    [ForeignKey("Role")]
     public int RoleId { get; set; }
     public Role? Role { get; set; }
 
-    public List<Address>? Addresses { get; set; }
+    public List<Address> Addresses { get; set; } = new();
     public Cart? Cart { get; set; }
+    public List<Shipping> Shippings { get; set; } = new();
 }
