@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.Address;
+using Cyber.Application.Interfaces;
 using Cyber.Core.Entities;
-using Cyber.Core.Helper;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Application.Services;
 
-public class AddressService
+public class AddressService : IAddressService
 {
-    private readonly GenericService<Address> _genericAddressService;
+    private readonly IGenericService<Address> _genericAddressService;
     private readonly IMapper _mapper;
 
-    public AddressService(GenericService<Address> addressService, IMapper mapper)
+    public AddressService(IGenericService<Address> addressService, IMapper mapper)
     {
         _genericAddressService = addressService;
         _mapper = mapper;

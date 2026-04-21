@@ -1,7 +1,6 @@
 ﻿using Cyber.Application.Dtos.Role;
-using Cyber.Application.Services;
+using Cyber.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_Cyber_API.Controllers;
@@ -10,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class RoleController : ControllerBase
 {
-    private readonly RoleService _roleService;
+    private readonly IRoleService _roleService;
 
-    public RoleController(RoleService roleService)
+    public RoleController(IRoleService roleService)
     {
         _roleService = roleService;
     }

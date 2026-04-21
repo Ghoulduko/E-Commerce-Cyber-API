@@ -1,22 +1,25 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.Shipping;
+using Cyber.Application.Interfaces;
 using Cyber.Core.Entities;
 using Cyber.Core.Enums;
-using Cyber.Core.Helper;
+using Cyber.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Cyber.Application.Services;
 
-public class ShippingService
+public class ShippingService : IShippingService
 {
-    private readonly ShippingRepository _service;
-    private readonly CartService _cartService;
+    private readonly IShippingRepository _service;
+    private readonly IGenericService<ShippingHistory> _historyService;
+    private readonly ICartService _cartService;
     private readonly IMapper _mapper;
     private readonly ILogger<ShippingService> _logger;
     
-    public ShippingService(ShippingRepository service, CartService cartService, IMapper mapper, ILogger<ShippingService> logger)
+    public ShippingService(IShippingRepository service, IGenericService<ShippingHistory> historyService, ICartService cartService, IMapper mapper, ILogger<ShippingService> logger)
     {
         _service = service;
+        _historyService = historyService;
         _cartService = cartService;
         _mapper = mapper;
         _logger = logger;
@@ -39,6 +42,7 @@ public class ShippingService
         var allShippings = await _service.GetUserShippings(userId);
         return _mapper.Map<List<ShippingDto>>(allShippings);
     }
+    
 
     public async Task AddShipping(int addressId, int userId)
     {
@@ -54,7 +58,7 @@ public class ShippingService
         var shippingInfo = new ShippingDto()
         {
             ShippingItems = shippingItems,
-            ShippingStatus = ShippingStatus.InProgress,
+            ShippingStatus = ShippingStatus.InProgress.ToString(),
             CreatedAt = DateTime.Now,
             UserId = userId,
             Cost = cost,
@@ -63,8 +67,32 @@ public class ShippingService
         
         var shipping = _mapper.Map<Shipping>(shippingInfo);
         await _service.Add(shipping);
-        
         await _cartService.ClearCart(userId);
+
+        var newHistory = new ShippingHistory
+        {
+            ShippingId = shipping.Id,
+            Status = shipping.ShippingStatus.ToString(),
+            ChangedStatusAt = DateTime.Now,
+        };
+        
+        await _historyService.Add(newHistory);
+    }
+
+    public async Task UpdateStatus(int shippingId, ShippingStatus shippingStatus)
+    {
+        var shipping = await _service.GetShippingById(shippingId);
+        
+        if (shipping.ShippingStatus == shippingStatus)
+            throw new InvalidOperationException($"Shipping status is already {shippingStatus}");
+        
+        shipping.ShippingStatus = shippingStatus;
+        
+        
+        var shippingHistory = await _historyService.GetFirst(s => s.ShippingId == shipping.Id);
+        shippingHistory.Status = shippingStatus.ToString();
+        shippingHistory.ChangedStatusAt = DateTime.Now;
+        await _service.Save();
     }
 
     public async Task DeleteShipping(int shippingId)

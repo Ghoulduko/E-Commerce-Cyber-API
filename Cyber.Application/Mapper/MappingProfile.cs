@@ -45,6 +45,7 @@ public class MappingProfile : Profile
         // Shipping mapping
         CreateMap<Shipping, ShippingDto>().ReverseMap();
         CreateMap<ShippingItem, ShippingItemDto>().ReverseMap();
+        CreateMap<ShippingItem, CartItemDto>().ReverseMap();
         CreateMap<ShippingItemDto, CartItemDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
     }

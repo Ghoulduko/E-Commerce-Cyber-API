@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.User;
-using Cyber.Core.Database;
 using Cyber.Core.Entities;
-using Cyber.Core.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Cyber.Application.Interfaces;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Application.Services;
 
-public class UserService
+public class UserService : IUserService
 {
-    private readonly GenericService<User> _service;
-    private readonly GenericService<Cart> _cartService;
-    private readonly AuthService _authService;
+    private readonly IGenericService<User> _service;
+    private readonly IGenericService<Cart> _cartService;
+    private readonly IAuthService _authService;
     private readonly IMapper _mapper;
 
-    public UserService(GenericService<User> userService, GenericService<Cart> cartService, AuthService authService, IMapper mapper)
+    public UserService(IGenericService<User> userService, IGenericService<Cart> cartService, IAuthService authService, IMapper mapper)
     {
         _service = userService;
         _cartService = cartService;

@@ -1,5 +1,6 @@
 ﻿using Cyber.Application.Dtos;
 using Cyber.Application.Dtos.Product;
+using Cyber.Application.Interfaces;
 using Cyber.Application.Services;
 using Cyber.Core.Database;
 using Cyber.Core.Entities;
@@ -15,11 +16,11 @@ namespace E_Commerce_Cyber_API.Controllers;
 public class FileController : ControllerBase
 {
     private readonly CyberDbContext _context;
-    private readonly ProductService _productService;
-    private readonly FileService _fileService;
+    private readonly IProductService _productService;
+    private readonly IFileService _fileService;
     private readonly IConfiguration _configuration;
 
-    public FileController(CyberDbContext context, ProductService productService, FileService fileService, IConfiguration configuration)
+    public FileController(CyberDbContext context, IProductService productService, IFileService fileService, IConfiguration configuration)
     {
         _context = context;
         _productService = productService;

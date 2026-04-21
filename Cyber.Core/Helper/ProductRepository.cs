@@ -1,12 +1,12 @@
-﻿using AutoMapper;
-using Cyber.Core.Database;
+﻿using Cyber.Core.Database;
 using Cyber.Core.Entities;
 using Cyber.Core.Enums;
+using Cyber.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cyber.Core.Helper;
 
-public class ProductRepository : GenericService<Product>
+public class ProductRepository : GenericService<Product>, IProductRepository
 {
     public ProductRepository(CyberDbContext context) : base(context) {}
 
@@ -43,10 +43,14 @@ public class ProductRepository : GenericService<Product>
         };
     }
 
-    public async Task<object> GetFavoriteProducts(int userId, int productId)
+    public async Task<List<Product>> GetFavoriteProducts(int userId)
     {
-        var product = await _context.FavoriteProducts.Where(x => x.UserId == userId && x.ProductId == productId).FirstOrDefaultAsync();
-        return product;
+        var products = await _context.FavoriteProducts
+            .Where(x => x.UserId == userId)
+            .Include(x => x.Product)
+            .Select(x => x.Product)
+            .ToListAsync();
+        return products;
     }
     
 }

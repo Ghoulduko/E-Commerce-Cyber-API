@@ -2,20 +2,14 @@
 using Cyber.Core.Database;
 using Cyber.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Core.Helper;
 
-public class CartRepository : GenericService<Cart>
+public class CartRepository : GenericService<Cart>, ICartRepository
 {
-    public CartRepository(CyberDbContext context, IMapper mapper) : base(context)
-    {
-
-    }
+    
+    public CartRepository(CyberDbContext context) : base(context) {}
 
     public async Task<Cart?> GetCartWithItems(int userId)
     {

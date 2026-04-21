@@ -1,16 +1,12 @@
-﻿using AutoMapper;
-using Cyber.Core.Database;
+﻿using Cyber.Core.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Cyber.Core.Entities;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Core.Helper;
 
-public class GenericService<T> where T : class
+public class GenericService<T> : IGenericService<T>  where T : class
 {
     protected readonly CyberDbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -54,6 +50,11 @@ public class GenericService<T> where T : class
     public async Task<List<T>> Filter(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.Where(predicate).ToListAsync();
+    }
+
+    public async Task<T> GetFirst(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate) ?? throw new Exception("item not found");
     }
 
     public async Task<bool> CheckExistence(Expression<Func<T, bool>> predicate)

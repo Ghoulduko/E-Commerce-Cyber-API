@@ -1,7 +1,6 @@
 ﻿using Cyber.Application.Dtos.Cart;
-using Cyber.Application.Services;
+using Cyber.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_Cyber_API.Controllers;
@@ -10,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class CartController : ControllerBase
 {
-    private readonly CartService _cartService;
+    private readonly ICartService _cartService;
 
-    public CartController(CartService cartService)
+    public CartController(ICartService cartService)
     {
         _cartService = cartService;
     }

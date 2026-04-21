@@ -1,23 +1,17 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Cyber.Application.Dtos.Role;
-using Cyber.Core.Database;
 using Cyber.Core.Entities;
-using Cyber.Core.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Cyber.Application.Interfaces;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Application.Services;
 
-public class RoleService
+public class RoleService : IRoleService
 {
-    private readonly GenericService<Role> _service;
+    private readonly IGenericService<Role> _service;
     private readonly IMapper _mapper;
 
-    public RoleService(GenericService<Role> userService, IMapper mapper)
+    public RoleService(IGenericService<Role> userService, IMapper mapper)
     {
         _service = userService;
         _mapper = mapper;

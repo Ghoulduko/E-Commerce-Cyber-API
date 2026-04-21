@@ -1,6 +1,6 @@
 ﻿using Cyber.Application.Dtos.User;
+using Cyber.Application.Interfaces;
 using Cyber.Application.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_Cyber_API.Controllers;
@@ -9,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(AuthService authService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
     }

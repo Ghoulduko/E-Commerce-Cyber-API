@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using Cyber.Application.Interfaces;
+using Cyber.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,28 +34,32 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<CyberDbContext>(i =>
     i.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<AddressService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<RoleService>();
-builder.Services.AddScoped<CacheService>();
-builder.Services.AddScoped<EmailService>();
-builder.Services.AddScoped<FileService>();
-builder.Services.AddScoped<ShippingService>();
-builder.Services.AddScoped<GenericService<Address>>();
-builder.Services.AddScoped<GenericService<User>>();
-builder.Services.AddScoped<GenericService<Role>>();
-builder.Services.AddScoped<GenericService<Product>>();
-builder.Services.AddScoped<GenericService<FavoriteProduct>>();
-builder.Services.AddScoped<GenericService<MediaFile>>();
-builder.Services.AddScoped<GenericService<Cart>>();
-builder.Services.AddScoped<GenericService<CartItem>>();
-builder.Services.AddScoped<GenericService<Shipping>>();
-builder.Services.AddScoped<CartRepository>();
-builder.Services.AddScoped<ProductRepository>();
-builder.Services.AddScoped<ShippingRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IFavoriteProductService, FavoriteProductService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartQuantityCalculator, CartQuantityCalculator>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IShippingService, ShippingService>();
+builder.Services.AddScoped<IGenericService<Address>, GenericService<Address>>();
+builder.Services.AddScoped<IGenericService<User>, GenericService<User>>(); 
+builder.Services.AddScoped<IGenericService<Role>, GenericService<Role>>();
+builder.Services.AddScoped<IGenericService<Product>, GenericService<Product>>();
+builder.Services.AddScoped<IGenericService<FavoriteProduct>, GenericService<FavoriteProduct>>();
+builder.Services.AddScoped<IGenericService<MediaFile>, GenericService<MediaFile>>();
+builder.Services.AddScoped<IGenericService<Cart>, GenericService<Cart>>();
+builder.Services.AddScoped<IGenericService<CartItem>, GenericService<CartItem>>();
+builder.Services.AddScoped<IGenericService<Shipping>, GenericService<Shipping>>();
+builder.Services.AddScoped<IGenericService<ShippingHistory>, GenericService<ShippingHistory>>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShippingRepository, ShippingRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

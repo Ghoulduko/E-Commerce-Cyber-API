@@ -1,10 +1,11 @@
 ﻿using Cyber.Core.Database;
 using Cyber.Core.Entities;
+using Cyber.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cyber.Core.Helper;
 
-public class ShippingRepository : GenericService<Shipping>
+public class ShippingRepository : GenericService<Shipping>, IShippingRepository
 {
     public ShippingRepository(CyberDbContext context) : base(context) {}
 

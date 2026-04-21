@@ -1,7 +1,6 @@
 ﻿using Cyber.Application.Dtos.User;
-using Cyber.Application.Services;
+using Cyber.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_Cyber_API.Controllers;
@@ -10,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }

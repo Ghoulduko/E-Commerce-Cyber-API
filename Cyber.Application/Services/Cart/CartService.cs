@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.Cart;
-using Cyber.Core.Database;
 using Cyber.Core.Entities;
-using Cyber.Core.Helper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Cyber.Application.Interfaces;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Application.Services;
 
-public class CartService
+public class CartService : ICartService
 {
-    private readonly CartRepository _cartRepository;
-    private readonly GenericService<CartItem> _cartItemService;
+    private readonly ICartRepository _cartRepository;
+    private readonly IGenericService<CartItem> _cartItemService;
+    private readonly ICartQuantityCalculator _cartQuantityCalculator;
     private readonly IMapper _mapper;
 
-    public CartService(CartRepository repo, GenericService<CartItem> cartItemService, IMapper mapper)
+    public CartService(ICartRepository repo, IGenericService<CartItem> cartItemService, IMapper mapper)
     {
         _cartRepository = repo;
         _cartItemService = cartItemService;
@@ -87,25 +82,7 @@ public class CartService
         if (cartItem == null)
             throw new ArgumentException("item not found, try again");
 
-        switch (req.QuantityAction)
-        {
-            case "increment":
-                if (cartItem.Quantity < 10)
-                    cartItem.Quantity++;
-                else
-                    throw new ArgumentException("Quantity cannot be more than 10.");
-                break;
-
-            case "decrement":
-                if (cartItem.Quantity > 1)
-                    cartItem.Quantity--;
-                else
-                    throw new ArgumentException("Quantity cannot be less than 1.");
-                break;
-
-            default:
-                throw new ArgumentException("Invalid quantity action. Use 'increment' or 'decrement'.");
-        }
+        cartItem.Quantity = _cartQuantityCalculator.UpdateQuantity(cartItem.Quantity, req.QuantityAction);
 
         await _cartItemService.Save();
     }

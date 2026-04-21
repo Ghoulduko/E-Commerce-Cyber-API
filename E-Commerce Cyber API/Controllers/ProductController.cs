@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Cyber.Application.Dtos.Product;
-using Cyber.Application.Services;
+using Cyber.Application.Interfaces;
 using Cyber.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +10,11 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
-    private readonly ProductService _productService;
-    private readonly IMapper _mapper;
+    private readonly IProductService _productService;
 
-    public ProductController(ProductService productService, IMapper mapper)
+    public ProductController(IProductService productService)
     {
         _productService = productService;
-        _mapper = mapper;
     }
 
     [HttpGet("AllProducts")]
@@ -31,32 +29,6 @@ public class ProductController : ControllerBase
     {
         var products = await _productService.PaginatedProducts(page, productFilter);
         return Ok(products);
-    }
-
-    [HttpPost("AddToFavorites")]
-    public async Task<IActionResult> AddProductToFavorites(AddFavoriteProductDto favoriteProduct)
-    {
-        var userId = User.FindFirst("UserId").Value ?? throw new InvalidOperationException("You need to login first");
-        var productToAdd = _mapper.Map<FavoriteProductDto>(favoriteProduct);
-        productToAdd.UserId = int.Parse(userId);
-        await _productService.AddProductToFavorites(productToAdd);
-        return Ok(new {message = "Product added successfully"});
-    }
-
-    [HttpGet("GetFavoriteProducts")]
-    public async Task<IActionResult> GetFavoriteProducts()
-    {
-        var userId = User.FindFirst("UserId").Value ?? throw new Exception("You need to login first");
-        var products = await _productService.GetAllFavoritedProducts(int.Parse(userId));
-        return Ok(products);
-    }
-
-    [HttpDelete("DeleteProductFromFavorites")]
-    public async Task<IActionResult> DeleteProductFromFavorites(int id)
-    {
-        var userId = User.FindFirst("UserId").Value ??  throw new InvalidOperationException("You need to login first");
-        await _productService.DeleteProductFromFavorites(id, int.Parse(userId));
-        return Ok(new {message = "Product deleted successfully"});
     }
 
     [HttpGet("ProductsByContentType/{type}")]

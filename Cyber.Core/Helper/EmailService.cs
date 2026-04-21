@@ -5,10 +5,11 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Cyber.Core.Interfaces;
 
 namespace Cyber.Core.Helper;
 
-public class EmailService
+public class EmailService : IEmailService
 {
     public void SendEmail(string email, string code)
     {

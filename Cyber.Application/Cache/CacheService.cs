@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cyber.Application.Interfaces;
 
 namespace Cyber.Application.Cache;
 
-public class CacheService
+public class CacheService : ICacheService
 {
     private readonly IMemoryCache _cache;
 

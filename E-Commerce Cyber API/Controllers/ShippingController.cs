@@ -1,6 +1,5 @@
-﻿using Cyber.Application.Dtos.Shipping;
-using Cyber.Application.Services;
-using Cyber.Core.Entities;
+﻿using Cyber.Application.Interfaces;
+using Cyber.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class ShippingController : Controller
 {
-    private readonly ShippingService _shippingService;
+    private readonly IShippingService _shippingService;
 
-    public ShippingController(ShippingService shippingService)
+    public ShippingController(IShippingService shippingService)
     {
         _shippingService = shippingService;
     }
@@ -49,6 +48,14 @@ public class ShippingController : Controller
         
         await _shippingService.AddShipping(addressId,int.Parse(userId));
         return Ok(new {message = "Successfully added shipping"});
+    }
+
+    [HttpPost("UpdateShipping")]
+    [Authorize(Roles = "ADMIN,SUPERADMIN")]
+    public async Task<IActionResult> UpdateStatus(int shippingId, ShippingStatus shippingStatus)
+    {
+        await _shippingService.UpdateStatus(shippingId, shippingStatus);
+        return Ok(new {message = "Shipping Status updated successfully" });
     }
 
     [HttpDelete("DeleteShipping/${shippingId}")]

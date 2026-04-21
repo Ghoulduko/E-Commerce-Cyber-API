@@ -52,4 +52,6 @@ public class CyberDbContext : DbContext
     
     public DbSet<Shipping> Shippings { get; set; }
     public DbSet<ShippingItem> ShippingItems { get; set; }
+    public DbSet<ShippingHistory> ShippingHistories { get; set; }
+    
 }

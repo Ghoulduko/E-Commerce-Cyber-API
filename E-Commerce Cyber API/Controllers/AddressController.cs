@@ -1,8 +1,6 @@
 ﻿using Cyber.Application.Dtos.Address;
-using Cyber.Application.Services;
-using Cyber.Core.Entities;
+using Cyber.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_Cyber_API.Controllers;
@@ -11,9 +9,9 @@ namespace E_Commerce_Cyber_API.Controllers;
 [ApiController]
 public class AddressController : ControllerBase
 {
-    private readonly AddressService _addressService;
+    private readonly IAddressService _addressService;
 
-    public AddressController(AddressService addressService)
+    public AddressController(IAddressService addressService)
     {
         _addressService = addressService;
     }
