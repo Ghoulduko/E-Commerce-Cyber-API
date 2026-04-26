@@ -11,12 +11,12 @@ namespace Cyber.Application.Services;
 public class ShippingService : IShippingService
 {
     private readonly IShippingRepository _service;
-    private readonly IGenericService<ShippingHistory> _historyService;
+    private readonly IShippingHistoryService _historyService;
     private readonly ICartService _cartService;
     private readonly IMapper _mapper;
     private readonly ILogger<ShippingService> _logger;
     
-    public ShippingService(IShippingRepository service, IGenericService<ShippingHistory> historyService, ICartService cartService, IMapper mapper, ILogger<ShippingService> logger)
+    public ShippingService(IShippingRepository service, IShippingHistoryService historyService, ICartService cartService, IMapper mapper, ILogger<ShippingService> logger)
     {
         _service = service;
         _historyService = historyService;
@@ -69,25 +69,27 @@ public class ShippingService : IShippingService
         await _service.Add(shipping);
         await _cartService.ClearCart(userId);
 
-        var newHistory = new ShippingHistory
+        var newHistory = new ShippingHistoryDto
         {
             ShippingId = shipping.Id,
             Status = shipping.ShippingStatus.ToString(),
             ChangedStatusAt = DateTime.Now,
         };
         
-        await _historyService.Add(newHistory);
+        await _historyService.AddHistory(newHistory);
     }
 
     public async Task UpdateStatus(int shippingId, ShippingStatus shippingStatus)
     {
         var shipping = await _service.GetShippingById(shippingId);
         
+        if (shipping == null)
+            throw new InvalidOperationException("Shipping not found");
+        
         if (shipping.ShippingStatus == shippingStatus)
             throw new InvalidOperationException($"Shipping status is already {shippingStatus}");
         
         shipping.ShippingStatus = shippingStatus;
-        
         
         var shippingHistory = await _historyService.GetFirst(s => s.ShippingId == shipping.Id);
         shippingHistory.Status = shippingStatus.ToString();

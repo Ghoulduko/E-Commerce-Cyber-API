@@ -60,6 +60,7 @@ builder.Services.AddScoped<IGenericService<ShippingHistory>, GenericService<Ship
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IShippingRepository, ShippingRepository>();
+builder.Services.AddScoped<IShippingHistoryService, ShippingHistoryService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -87,7 +88,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "User Management", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cyber Commerce API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,

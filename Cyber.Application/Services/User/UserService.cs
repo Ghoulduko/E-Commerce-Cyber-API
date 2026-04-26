@@ -43,6 +43,7 @@ public class UserService : IUserService
         {
             UserId = userToAdd.Id,
         };
+        
         await _cartService.Add(cart);
 
         var tokenToReturn = await _authService.Login(new LoginUserDto { Email = user.Email, Password = user.Password });

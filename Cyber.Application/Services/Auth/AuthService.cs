@@ -17,14 +17,12 @@ public class AuthService : IAuthService
 {
     private readonly CyberDbContext _context;
     private readonly ITokenService _tokenService;
-    private readonly ICacheService _cacheService;
     private readonly IEmailService _emailService;
 
-    public AuthService(CyberDbContext context, ITokenService tokenService, ICacheService cacheService, IEmailService emailService)
+    public AuthService(CyberDbContext context, ITokenService tokenService, IEmailService emailService)
     {
         _context = context;
         _tokenService = tokenService;
-        _cacheService = cacheService;
         _emailService = emailService;
     }
 
@@ -36,6 +34,9 @@ public class AuthService : IAuthService
         if (!BC.EnhancedVerify(request.Password, user.Password)) throw new ArgumentException("The password is wrong, try again");
         
         var token = _tokenService.CreateToken(user) ?? throw new ArgumentException("The token is wrong");
+        
+        _emailService.SendEmail(request.Email);
+        
         return token;
     }
 }

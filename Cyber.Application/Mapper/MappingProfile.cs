@@ -48,5 +48,8 @@ public class MappingProfile : Profile
         CreateMap<ShippingItem, CartItemDto>().ReverseMap();
         CreateMap<ShippingItemDto, CartItemDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+        
+        // Shipping History mapping
+        CreateMap<ShippingHistory, ShippingHistoryDto>().ReverseMap();
     }
 }

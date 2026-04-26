@@ -1,11 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Cyber.Application.Dtos.Shipping;
+using Cyber.Application.Interfaces;
 using Cyber.Core.Entities;
 using Cyber.Core.Interfaces;
 
 namespace Cyber.Application.Services;
 
-public class ShippingHistoryService
+public class ShippingHistoryService : IShippingHistoryService
 {
     private readonly IGenericService<ShippingHistory> _historyService;
     private readonly IMapper _mapper;
@@ -25,6 +27,11 @@ public class ShippingHistoryService
         var historyToAdd = _mapper.Map<ShippingHistory>(req);
         
         await _historyService.Add(historyToAdd);
+    }
+
+    public async Task<ShippingHistory> GetFirst(Expression<Func<ShippingHistory, bool>> predicate)
+    {
+        return await _historyService.GetFirst(predicate);
     }
 
     public async Task RemoveHistory(ShippingHistoryDto req)
